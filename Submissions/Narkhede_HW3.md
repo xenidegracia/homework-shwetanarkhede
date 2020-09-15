@@ -2,6 +2,17 @@
 ## Name: Shweta Narkhede
 #### Submission date: Sept, 14th, 2020
 
+---------
+# Grade
+
+3/3 - Nice work!
+
+Two notes for next time:
+1. You might want to change your markdown formatting a bit because right now you have everything as a header. Remember that you can preview what it will look like in atom
+2. I didn't take off points this time but  next time remember you also need to include a summary explaining how you generated your forecast. 
+
+---
+
 ## Describe the variables flow, year, month, and day. What type of objects are they, what are they composed of, and how long are they?
 #### flow: This variable indicates daily streamflow at the study location. Its a "list" with variable type "float". The length of this variable is 11578 showing streamflow record for period 01/01/1989 to 09/12/2020.
 #### year: This variable indicates the year of the streamflow records at the study location. Its a "list" with variable type "int". The length of this variable is 11578 showing year of streamflow record for period 01/01/1989 to 09/12/2020.
