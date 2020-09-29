@@ -2,6 +2,9 @@
 ## Name: Shweta Narkhede
 #### Submission date: Sept, 27th, 2020
 ___
+## Grade
+3/3 - Great work!  I like your forecasting approach.  One note is that your image didn't render in your md within  atom. Next  time try the plugin I recommended and that should fix it. 
+___
 
 ## **Assignment Questions**
 ___
@@ -196,4 +199,4 @@ ___
 ___
 - I tried to figure out the percentage change in mean weekly streamsflows from year to year and from week to week in same year. For the current forecast I preferred to stick to year 2019 and 2020 as trend in earlier years was quite fluctuating.
 - I plotted the mean weekly flow in Sept and Oct for past 3 years to visualize the trend.
-- The mean percenatge change in weekly flow was calculated for record of 2018 to 2020. The forecast for next few weeks was calculated based on mean percentage change in flow in 2018 and 2019. 
+- The mean percenatge change in weekly flow was calculated for record of 2018 to 2020. The forecast for next few weeks was calculated based on mean percentage change in flow in 2018 and 2019.
