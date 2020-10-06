@@ -3,6 +3,9 @@
 #### Submission date: Oct 4th, 2020
 
 ___
+### Grade
+3/3 - Great job! I really like your graphs.
+___
 ## **Forecast Summary**
 - I tried to figure out the percentage change in mean weekly streamsflows from year to year and from week to week in same year. For the current forecast I preferred to stick to year 2019 and 2020 as trend in earlier years was quite fluctuating.
 - I plotted the mean weekly flow in Sept and Oct for past 3 years to visualize the trend.
