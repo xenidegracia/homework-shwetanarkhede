@@ -14,4 +14,4 @@ Thanks!
 | Forecasts | Week 1 flow (cfs)| Week 2 flow (cfs)|
 |:---------:|:----------------:|:----------------:|
 |AR Model Forecasts |          |                  |
-|Forecast Competition Entrie|  |                  |
+|Forecasted Entries for Competition|  |                  |
