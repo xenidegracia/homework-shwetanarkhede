@@ -72,82 +72,91 @@ test = mydata[trainset:][['flow', 'flow_tm1', 'flow_tm2', 'flow_tm3',
                           'flow_tm4', 'flow_tm5', 'flow_tm6', 'flow_tm7',
                           'flow_tm8']]
 
-# Step 3: Fitting a linear regression model using sklearn
-# For week 1 ahead forecast
-model1 = LinearRegression()
-x = train[['flow_tm1', 'flow_tm2', 'flow_tm3', 'flow_tm4',
-           'flow_tm5', 'flow_tm6', 'flow_tm7', 'flow_tm8']].values
-y = train[['flow']].values
-model1.fit(x, y)
+trainindex = train.index
+testindex = train.index
+# %%
+# Creating function to use Auto-regression model multiple times
 
-# Model Results
-r_sq1 = model1.score(x, y)
-print('Training: Coefficient of Determination = ', np.round(r_sq1, 2))
-print('Training: Intercept = ', np.round(model1.intercept_, 2))
-print('Training: Slope = ', np.round(model1.coef_[0], 2))
 
-# Step 4: Making a prediction with model
-# Predicting the model response for a  given flow value
-q_pred_train = model1.predict(train[['flow_tm1', 'flow_tm2', 'flow_tm3',
-                                     'flow_tm4', 'flow_tm5', 'flow_tm6',
-                                     'flow_tm7', 'flow_tm8']].values)
+def AR_Model(x_train, y_train, x_test, y_test, last_week_flow, trainindex):
+    """ Auto-regression model for fotrecasting streamflow
 
-# Alternatively, instead of using predict function, predictions can be made
-# with the following equation
-# q_pred = model.intercept_ + model.coef_ * train['flow_tm1']
+    Parameters
+    ----------
+    input : arrays and dataframe
+    x_train, y_train, x_test, y_test are arrays of training and
+    testing datasets while last_week_flow is the dataframe of
+    latest flow record. trainindex is general index for training
+    data used for plotting as x-axis
 
-# Training plot
-fig, ax = plt.subplots()
-ax.plot(train.index, train['flow'].values, label='Observed')
-ax.plot(train.index, q_pred_train, label='Training')
-ax.set(title="Model Training for week 1 Forecast", xlabel="Date",
-       ylabel="Weekly Avg Flow [cfs]", yscale='log')
-ax.legend()
-fig.set_size_inches(5, 3)
-fig.savefig("Model1 Training plot.png")  # Saving plot as .png image
+    Returns
+    ------
+    output : type
+    Output is printed as flow value of week1 prediction in cfs
+    """
+    # Fitting AR model to training dataset
+    model = LinearRegression().fit(x_train, y_train)
 
-# Testing Plot
-q_pred_test = model1.predict(test[['flow_tm1', 'flow_tm2', 'flow_tm3',
-                                   'flow_tm4', 'flow_tm5', 'flow_tm6',
-                                   'flow_tm7', 'flow_tm8']].values)
-fig, ax = plt.subplots()
-ax.plot(test.index, test['flow'].values, label='Observed')
-ax.plot(test.index, q_pred_test, label='Testing')
-ax.set(title="Model Testing for week 1 Forecast", xlabel="Date",
-       ylabel="Weekly Avg Flow [cfs]", yscale='log')
-ax.legend()
-fig.set_size_inches(5, 3)
-fig.savefig("Model1 Testing plot.png")
+    # Predicting flows using fitted AR model for training dataset
+    q_pred_train = model.predict(x_train)
 
-# Predicting streamflow for week1
+    # Printing model fitting parameters
+    r_sq1 = model.score(x_train, y_train)
+    print('Training: Coefficient of Determination = ', np.round(r_sq1, 2))
+    print('Training: Intercept = ', np.round(model.intercept_, 2))
+    print('Training: Slope = ', np.round(model.coef_[0], 2))
+
+    # Plotting flow prediction for training data to visualize model fitting
+    fig, ax = plt.subplots()
+    ax.plot(trainindex, y_train, label='Observed')
+    ax.plot(trainindex, q_pred_train, label='Training')
+    ax.set(title="Model Training", xlabel="Date",
+           ylabel="Weekly Avg Flow [cfs]", yscale='log')
+    ax.legend()
+    fig.set_size_inches(5, 3)
+
+    # Predicting flows with fitted AR Model
+    nextweek_prediction = model.predict(last_week_flow.values)
+
+    # Output of this fuction will be printed as forecasted streamflow
+    return nextweek_prediction
+
+
+# %%
+# Using AR_model function to fit different AR models to predict streamflows
+# with diffrent inputs
+
+# Model for 1 week prediction using 1-timestep lagged 8 inputs
+x1_train = train[['flow_tm1', 'flow_tm2', 'flow_tm3', 'flow_tm4',
+                  'flow_tm5', 'flow_tm6', 'flow_tm7', 'flow_tm8']].values
+y1_train = train[['flow']].values
+x1_test = test[['flow_tm1', 'flow_tm2', 'flow_tm3', 'flow_tm4',
+                'flow_tm5', 'flow_tm6', 'flow_tm7', 'flow_tm8']].values
+y1_test = test[['flow']].values
+
 last_week_flow = mydata.tail(1)[['flow_tm1', 'flow_tm2', 'flow_tm3',
                                  'flow_tm4', 'flow_tm5', 'flow_tm6',
                                  'flow_tm7', 'flow_tm8']]
-week1_prediction = model1.predict(last_week_flow.values)
-print('Week 1 forecast = ', week1_prediction[0], 'cfs')
-
-# Adding predicted flow to selected dataset
-# newflowdata = np.append(mydata['flow'], week1_prediction)
+model1_pred = AR_Model(x1_train, y1_train, x1_test,
+                       y1_test, last_week_flow, trainindex)
+print('Week 1 Forecast = ', model1_pred[0], 'cfs')
 
 # %%
-# Model for week 2 forecast
+# Model for 2 week prediction using 2-timestep lagged 4 inputs
+x2_train = train[['flow_tm2', 'flow_tm4', 'flow_tm6',
+                  'flow_tm8']].values
+y2_train = train[['flow']].values
+x2_test = test[['flow_tm2', 'flow_tm4', 'flow_tm6',
+                'flow_tm8']].values
+y2_test = test[['flow']].values
 
-# Need to use upto two time step lagged time series
-# Using every second time series instead of making new dataset
-model2 = LinearRegression()
-x2 = train[['flow_tm2', 'flow_tm4', 'flow_tm6', 'flow_tm8']]
-model2.fit(x2, y)
-r_sq2 = model2.score(x2, y)
-print('coefficient of determination:', np.round(r_sq2, 2))
-print('intercept:', np.round(model2.intercept_, 2))
-print('slope:', np.round(model2.coef_, 2))
+last_week_flow2 = mydata.tail(1)[['flow_tm2', 'flow_tm4', 'flow_tm6',
+                                  'flow_tm8']]
 
-last_week_flow1 = mydata.tail(1)[['flow_tm2', 'flow_tm4',
-                                  'flow_tm6', 'flow_tm8']]
+model2_pred = AR_Model(x2_train, y2_train, x2_test,
+                       y2_test, last_week_flow2, trainindex)
 
-week2_prediction = model2.predict(last_week_flow1.values)
-print('Week 2 forecast = ', week2_prediction[0], 'cfs')
-
+print('Week 2 Forecast = ', model2_pred[0], 'cfs')
 # %%
 # Extra informative plots
 
@@ -160,7 +169,7 @@ ax.set(title="Observed Flow", xlabel="Date",
        ylabel="Weekly Avg Flow [cfs]", yscale='log')
 ax.legend()
 fig.set_size_inches(8, 3)
-fig.savefig("Selected data.png")
+# fig.savefig("Selected data.png")
 
 # 2. Time series of flow values with the x axis range limited
 fig, ax = plt.subplots()
@@ -171,13 +180,25 @@ ax.set(title="Observed Flow", xlabel="Date", ylabel="Weekly Avg Flow [cfs]",
                            datetime.date(2020, 10, 10)])
 ax.legend()
 fig.set_size_inches(8, 3)
-fig.savefig("Zoomed training data.png")
+# fig.savefig("Zoomed training data.png")
+
+# 3.Plotting training and testing data
+fig, ax = plt.subplots()
+ax.plot(train.index, train['flow'].values, 'r', label='Training data')
+ax.plot(test.index, test['flow'].values, 'g', label='Testing data')
+ax.set(title=" Data used for Models", xlabel="Date",
+       ylabel="Weekly Avg Flow [cfs]", yscale='log')
+ax.legend()
+fig.set_size_inches(8, 3)
+# fig.savefig("Training-testing data.png")
 
 # %% Printing required answers:
+print('AR Model Forecasts for Week 1 = ', model1_pred[0], 'cfs')
+print('AR Model Forecasts for Week 2 = ', model2_pred[0], 'cfs')
+# My forecast copetition entries are same as AR model predicted streamflows
+print('Forecasted flow entries for competition week 1 = ',
+      model1_pred[0], 'cfs')
+print('Forecasted flow entries for competition week 2 = ',
+      model2_pred[0], 'cfs')
 
-print('AR Model Week 1 forecast = ', week1_prediction[0], 'cfs')
-print('AR Model Week 2 forecast = ', week2_prediction[0], 'cfs')
-# Using AR Model results for competition
-print('Week 1 forecast for competition = ', week1_prediction[0], 'cfs')
-print('Week 2 forecast for competition = ', week2_prediction[0], 'cfs')
 # %%
