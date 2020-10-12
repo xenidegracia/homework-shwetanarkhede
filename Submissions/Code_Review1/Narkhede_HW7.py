@@ -3,6 +3,13 @@
 # Last edited: Oct 5th, 2020
 
 # %%
+<<<<<<< HEAD
+=======
+# COMMENTS FROM XENIA =)
+# 
+
+# %%
+>>>>>>> parent of 5bffaba... Erasing to resubmit
 # Importing the modules
 import os
 import numpy as np
@@ -14,8 +21,14 @@ import datetime
 # %%
 # Accessing data
 filename = 'streamflow_week7.txt'
+<<<<<<< HEAD
 filepath = os.path.join('/Users/owner/Documents/GitHub/\
 homework-shwetanarkhede/Submissions/Code_Review1', filename)
+=======
+# Xenia: I run the code for the first time and it comes and error about \
+# FileNotFound. I will change the path to run it from my computer.
+filepath = os.path.join(r'C:\Users\xy_22\Documents\MSc._Hydrology\2020_Fall\599-HAS_Tools\homework-shwetanarkhede\Submissions\Code_Review1', filename)
+>>>>>>> parent of 5bffaba... Erasing to resubmit
 print(os.getcwd())
 print(filepath)
 
@@ -56,6 +69,11 @@ flow_weekly['flow_tm8'] = flow_weekly['flow'].shift(8)
 
 # Step 2: Selecting data to use for prediction
 # Using data from 2006 onwards
+<<<<<<< HEAD
+=======
+# Xenia: Here, instead of 2006, as the comments said, we are using data from \
+# August to October, since 2018 to the current year.
+>>>>>>> parent of 5bffaba... Erasing to resubmit
 mydata = flow_weekly[
     (flow_weekly['year'] >= 2018) &
     (flow_weekly['month'] <= 10) &
@@ -113,7 +131,11 @@ def AR_Model(x_train, y_train, x_test, y_test, last_week_flow, trainindex):
     ax.set(title="Model Training", xlabel="Date",
            ylabel="Weekly Avg Flow [cfs]", yscale='log')
     ax.legend()
+<<<<<<< HEAD
     fig.set_size_inches(5, 3)
+=======
+    fig.set_size_inches(8, 3)
+>>>>>>> parent of 5bffaba... Erasing to resubmit
 
     # Predicting flows with fitted AR Model
     nextweek_prediction = model.predict(last_week_flow.values)
@@ -138,7 +160,14 @@ last_week_flow = mydata.tail(1)[['flow_tm1', 'flow_tm2', 'flow_tm3',
                                  'flow_tm4', 'flow_tm5', 'flow_tm6',
                                  'flow_tm7', 'flow_tm8']]
 model1_pred = AR_Model(x1_train, y1_train, x1_test,
+<<<<<<< HEAD
                        y1_test, last_week_flow, trainindex)
+=======
+                       y1_test, last_week_flow, trainindex).round(2)
+
+# Xenia: Added the round function at the end of model1_pred to avoid long
+# numbers.
+>>>>>>> parent of 5bffaba... Erasing to resubmit
 print('Week 1 Forecast = ', model1_pred[0], 'cfs')
 
 # %%
@@ -154,8 +183,15 @@ last_week_flow2 = mydata.tail(1)[['flow_tm2', 'flow_tm4', 'flow_tm6',
                                   'flow_tm8']]
 
 model2_pred = AR_Model(x2_train, y2_train, x2_test,
+<<<<<<< HEAD
                        y2_test, last_week_flow2, trainindex)
 
+=======
+                       y2_test, last_week_flow2, trainindex).round(2)
+
+# Xenia: Added the round function at the end of model2_pred to avoid long
+# numbers.
+>>>>>>> parent of 5bffaba... Erasing to resubmit
 print('Week 2 Forecast = ', model2_pred[0], 'cfs')
 # %%
 # Extra informative plots
